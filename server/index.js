@@ -5,6 +5,9 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+require("mongoose-double")(mongoose);
+const passportLocalMongoose = require("passport-local-mongoose");
+const passport = require("passport");
 
 // configuring middlewares
 
@@ -33,6 +36,49 @@ mongoose
     // we will not be here...
     console.error("Connection Error: ", err.stack);
   });
+
+// mongoDB schemas
+var SchemaTypes = mongoose.Schema.Types;
+const userSchema = new mongoose.Schema({
+  fname: String,
+  lname: String,
+  balance: String,
+  transactions: {
+    sender: String,
+    receiver: String,
+    amount: SchemaTypes.Double,
+    transactionId: String,
+    status: Boolean,
+    description: String,
+    date: String,
+  },
+  email: String,
+});
+userSchema.plugin(passportLocalMongoose);
+const User = new mongoose.model("User", userSchema);
+
+//4. Passport
+
+app.use(passport.initialize());
+passport.use(User.createStrategy());
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
+
+//Endpoints Creations
+app.get("/register", (req, res) => {
+  const fname = req.body.fname;
+  const lname = req.body.lname;
+  const balance = "0";
+  res.send("<h1> weldone oooooo</h1>");
+});
 
 //listening on port
 const port = 5000;
