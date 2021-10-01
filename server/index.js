@@ -83,5 +83,5 @@ app.get("/register", (req, res) => {
 //listening on port
 const port = 5000;
 app.listen(process.env.PORT || port, function () {
-  console.log("Application is running " + port);
+  console.log("Application is running on " + port);
 });
