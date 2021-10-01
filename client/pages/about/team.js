@@ -1,6 +1,5 @@
 import React from "react";
 import Head from "next/head";
-import teamStyles from "../../styles/team.module.css";
 function Team() {
   return (
     <div className={teamStyles.body}>
