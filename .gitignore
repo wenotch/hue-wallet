@@ -4,10 +4,14 @@
 client/node_modules
 server/node_modules
 /.pnp
-/server/.env
+/server/.env\
+
 server/.env
 .pnp.js
 
+client/.gitignore
+server/.gitignore
+.gitignore
 # testing
 /coverage
 
