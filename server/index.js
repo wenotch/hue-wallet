@@ -21,6 +21,7 @@ app.use(
     extended: true,
   })
 );
+app.use(bodyParser.json());
 
 // 3. mongoose
 mongoose
@@ -73,11 +74,30 @@ passport.deserializeUser(function (id, done) {
 });
 
 //Endpoints Creations
-app.get("/register", (req, res) => {
+app.post("/register", (req, res) => {
+  //receives data from user form
   const fname = req.body.fname;
   const lname = req.body.lname;
-  const balance = "0";
-  res.send("<h1> weldone oooooo</h1>");
+  const balance = 0;
+
+  //calls on passport to register the user
+  User.register(
+    {
+      username: req.body.username,
+      fname: fname,
+      lname: lname,
+      balance: balance,
+      email: req.body.username,
+    },
+    req.body.password,
+    async (err, user) => {
+      if (err) {
+        await res.send(err).json();
+      } else {
+        console.log("registered " + user.username);
+      }
+    }
+  );
 });
 
 //listening on port
