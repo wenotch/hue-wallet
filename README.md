@@ -5,3 +5,5 @@ This is a personal project trying to build a mobile wallet using tools like next
 Collaborators
 1. Nwanochie Emmanuel
 2. Nwalo Okechukwu
+
+Interested to collaborate? send an email: emmanuelnwanochie247@gmail.com
