@@ -12,6 +12,10 @@
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongoose": "^6.0.8"
+    "mongoose": "^6.0.8",
+    "@mongoosejs/double": "^0.2.0",
+    "mongoose-double": "^0.0.1",
+    "passport": "^0.5.0",
+    "passport-local-mongoose": "^6.1.0"
   }
 }
