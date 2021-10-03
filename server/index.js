@@ -1,13 +1,12 @@
 //requiring everionmental variables.
-require("dotenv").config();
 
 // importing packages
 const express = require("express");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 require("mongoose-double")(mongoose);
 const passportLocalMongoose = require("passport-local-mongoose");
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 
 // configuring middlewares
 
@@ -15,17 +14,11 @@ const passport = require("passport");
 const app = express();
 app.use(express.static("public"));
 
-// 2.body-parser
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
-app.use(bodyParser.json());
+app.use(express.json());
 
 // 3. mongoose
 mongoose
-  .connect(process.env.DATABASE_CONNECTION, {
+  .connect("mongodb://localhost:27017/example", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -77,16 +70,12 @@ passport.deserializeUser(function (id, done) {
 
 //1. register
 app.post("/register", (req, res) => {
-  const fname = req.body.fname;
-  const lname = req.body.lname;
-  const balance = 0;
-
   User.register(
     {
       username: req.body.username,
-      fname: fname,
-      lname: lname,
-      balance: balance,
+      fname: req.body.fname,
+      lname: req.body.lname,
+      balance: 0,
       email: req.body.username,
     },
     req.body.password,
@@ -95,7 +84,15 @@ app.post("/register", (req, res) => {
         await res.send(err).json();
         console.log("not registered ");
       } else {
+        const accessToken = jwt.sign(
+          { username: user.username },
+          "thisisthelegendarysecretkey"
+        );
         console.log("registered " + user.username);
+        res.json({
+          username: user.username,
+          accessToken: accessToken,
+        });
       }
     }
   );
@@ -110,15 +107,15 @@ app.post("/login", (req, res) => {
 
   req.login(user, async function (err) {
     if (err) {
-      await res.send(err).json();
+      await res.json(err);
     } else {
       User.findOne(
         { username: user.username },
         async function (err, foundUser) {
           if (err) {
-            await res.send(err).json();
+            await res.json(err);
           } else {
-            await res.send(foundUser).json();
+            await res.json(foundUser);
           }
         }
       );
