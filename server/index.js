@@ -81,7 +81,7 @@ app.post("/register", (req, res) => {
     req.body.password,
     async (err, user) => {
       if (err) {
-        await res.send(err).json();
+        res.send(err).json();
         console.log("not registered ");
       } else {
         const accessToken = jwt.sign(
@@ -113,9 +113,9 @@ app.post("/login", (req, res) => {
         { username: user.username },
         async function (err, foundUser) {
           if (err) {
-            await res.json(err);
+            res.json(err);
           } else {
-            await res.json(foundUser);
+            res.json(foundUser);
           }
         }
       );
